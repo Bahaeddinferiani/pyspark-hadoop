@@ -1,7 +1,8 @@
 version: "1.0"
 
-# Owner: Bahaeddine FERIANI
-
+#############################
+# Owner: Bahaeddine FERIANI #
+#############################
 
 services:
   spark-master:
@@ -11,12 +12,12 @@ services:
       - "9090:8080"
       - "7077:7077"
     volumes:
-       - ./data:/data
+      - ./data:/data
     environment:
       - SPARK_LOCAL_IP=master
       - SPARK_WORKLOAD=master
     networks:
-    - kepler   
+      - kepler
   spark-worker-a:
     image: sparkcluster
     container_name: worker
@@ -24,7 +25,7 @@ services:
       - "9091:8080"
       - "7000:7000"
     networks:
-    - kepler    
+      - kepler
     depends_on:
       - spark-master
     environment:
@@ -36,9 +37,9 @@ services:
       - SPARK_WORKLOAD=worker
       - SPARK_LOCAL_IP=spark-worker-a
     volumes:
-       - ./data:/data
+      - ./data:/data
 
 networks:
-   kepler:
+  kepler:
     name: kepler
     driver: bridge
