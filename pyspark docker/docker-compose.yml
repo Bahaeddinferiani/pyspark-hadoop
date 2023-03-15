@@ -1,0 +1,19 @@
+version: "1.0"
+
+# Owner: Bahaeddine FERIANI
+
+services:
+   pyspark:
+    container_name: pyspark
+    image: pyspark
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./data:/data
+    networks:
+    - kepler
+networks:
+   kepler:
+    name: kepler
+    driver: bridge
+

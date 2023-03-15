@@ -1,0 +1,44 @@
+version: "1.0"
+
+# Owner: Bahaeddine FERIANI
+
+
+services:
+  spark-master:
+    container_name: master
+    image: sparkcluster
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+    volumes:
+       - ./data:/data
+    environment:
+      - SPARK_LOCAL_IP=master
+      - SPARK_WORKLOAD=master
+    networks:
+    - kepler   
+  spark-worker-a:
+    image: sparkcluster
+    container_name: worker
+    ports:
+      - "9091:8080"
+      - "7000:7000"
+    networks:
+    - kepler    
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://master:7077
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_DRIVER_MEMORY=1G
+      - SPARK_EXECUTOR_MEMORY=1G
+      - SPARK_WORKLOAD=worker
+      - SPARK_LOCAL_IP=spark-worker-a
+    volumes:
+       - ./data:/data
+
+networks:
+   kepler:
+    name: kepler
+    driver: bridge
