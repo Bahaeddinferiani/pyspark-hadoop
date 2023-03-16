@@ -6,6 +6,7 @@ USER root
 #############################
 # Owner: Bahaeddine FERIANI #
 #############################
+
 ENV PYSPARK_VERSION=3.2.3
 # Install OpenJDK-8 and dependencies
 RUN apt-get update && \
