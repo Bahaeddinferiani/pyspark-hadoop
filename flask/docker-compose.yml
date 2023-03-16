@@ -6,11 +6,11 @@ version: "1.0"
 
 services:
   pyspark:
-    container_name: pyspark
-    image: pyspark
+    container_name: flaskapp
+    image: flaskapp
     restart: on-failure
     ports:
-      - "8888:8888"
+      - "5000:5000"
     volumes:
       - ./data:/data
     networks:

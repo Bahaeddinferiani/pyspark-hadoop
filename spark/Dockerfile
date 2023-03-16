@@ -9,6 +9,11 @@ FROM ubuntu:20.04 as builder
 # For interactive dependencies 
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Hadoop version / Spark environment variables
+ENV SPARK_VERSION=3.2.3 \
+HADOOP_VERSION=3.2 \
+SPARK_HOME=/opt/spark 
+
 # Install OpenJDK-8
 RUN apt-get update && \
     apt-get install -y openjdk-8-jdk && \
@@ -38,22 +43,11 @@ RUN apt-get update && \
     apt-get install -y ca-certificates && \
     apt-get install -y unzip
 
-ENV SPARK_VERSION=3.2.3 \
-HADOOP_VERSION=3.2 \
-SPARK_HOME=/opt/spark 
-
-
 # Download and uncompress spark from the apache archive
-RUN wget --no-verbose -O apache-spark.tgz "https://dlcdn.apache.org/spark/spark-3.2.3/spark-3.2.3-bin-hadoop3.2.tgz" \
-&& mkdir -p /opt/spark \
-&& tar -xf apache-spark.tgz -C /opt/spark --strip-components=1 \
-&& rm apache-spark.tgz
-
-# Mysql driver setup
-RUN wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-8.0.32.zip && \
-    unzip mysql-connector-j-8.0.32.zip && \
-    cd mysql-connector-j-8.0.32 && \
-    mv mysql-connector-j-8.0.32.jar /opt/spark/jars
+RUN wget --no-verbose -O apache-spark.tgz "https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" && \
+    mkdir -p /opt/spark && \
+    tar -xf apache-spark.tgz -C /opt/spark --strip-components=1 && \
+    rm apache-spark.tgz
 
 # Apache spark environment
 FROM builder as apache-spark

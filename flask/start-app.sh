@@ -1,0 +1,1 @@
+flask --app /flask/index run --host=0.0.0.0

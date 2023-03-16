@@ -1,17 +1,21 @@
 version: "1.0"
 
+#############################
+# Owner: Bahaeddine FERIANI #
+#############################
+
 services:
   namenode:
     image: hadoopnamenode
     container_name: namenode
-    restart: always
+    restart: on-failure
     ports:
       - 9870:9870
       - 9000:9000
     volumes:
       - hadoop_namenode:/hadoop/dfs/name
     environment:
-      - CLUSTER_NAME=test
+      - CLUSTER_NAME=hadoop
     env_file:
       - ./hadoop.env
     networks:
@@ -20,7 +24,7 @@ services:
   datanode:
     image: hadoopdatanode
     container_name: datanode
-    restart: always
+    restart: on-failure
     volumes:
       - hadoop_datanode:/hadoop/dfs/data
     environment:
@@ -33,7 +37,7 @@ services:
   resourcemanager:
     image: hadooprecourcemanager
     container_name: resourcemanager
-    restart: always
+    restart: on-failure
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864"
     env_file:
@@ -44,22 +48,9 @@ services:
   nodemanager1:
     image: hadoopnodemanager
     container_name: nodemanager
-    restart: always
+    restart: on-failure
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
-    env_file:
-      - ./hadoop.env
-    networks:
-      - kepler
-
-  historyserver:
-    image: hadoophistoryserver
-    container_name: historyserver
-    restart: always
-    environment:
-      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
-    volumes:
-      - hadoop_historyserver:/hadoop/yarn/timeline
     env_file:
       - ./hadoop.env
     networks:
@@ -68,7 +59,6 @@ services:
 volumes:
   hadoop_namenode:
   hadoop_datanode:
-  hadoop_historyserver:
 networks:
   kepler:
     name: kepler
